@@ -41,8 +41,9 @@ body {
     border: 1px solid #ccc;
     flex-shrink: 0;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .square:hover {
-    background-color: #4CAF50;
+    /* Hover effect handled by JavaScript */
 }
