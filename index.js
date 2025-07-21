@@ -77,7 +77,7 @@ function handleSquareHover(square) {
     const newOpacity = Math.max(0, 1 - (square.interactions * 0.1));
 
     // Apply the new opacity to create darkening effect
-    square.style.opacity = newOpacity;
+    square.style.opacity = newOpacity.toString(); //CSS expects a string for the opacity value
 }
 
 /**
