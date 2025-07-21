@@ -1,6 +1,8 @@
 // noinspection JSUnresolvedVariable
 // Global variable to keep track of the current grid size
 let currentGridSize = 16;
+// Initialize default grid when page loads
+createGrid(currentGridSize);
 
 /**
  * Creates a new grid with the specified number of squares per side
@@ -10,11 +12,11 @@ function createGrid(gridSize) {
     const container = document.getElementById('container');
     container.innerHTML = '';
 
-    // Calculate square size to fit evenly in 960px container
-    // Example: 960px ÷ 16 squares = 60px per square
+    // Calculate square size to fit evenly in 960 px container
+    // Example: 960px ÷ 16 squares = 60 px per square
     const squareSize = 960 / gridSize;
 
-    // Calculate total squares needed for the grid
+    // Calculate total squares needed for the grid (16 x 16 = 256 squares)
     const totalSquares = gridSize * gridSize;
 
     // Create each square using a loop
@@ -26,9 +28,8 @@ function createGrid(gridSize) {
         square.style.width = squareSize + 'px';
         square.style.height = squareSize + 'px';
 
-        // Store properties for tracking hover state and original color
+        // Initialize hover counter
         square.interactions = 0;
-        square.originalColor = null;  // Will store the original RGB values
 
         // Add mouse hover event listener
         square.addEventListener('mouseenter', function () {
@@ -61,27 +62,22 @@ function getRandomColor() {
 function handleSquareHover(square) {
     // First time hovering - assign and store a random color object ex. {r: 144, g: 45, b: 77}
     if (square.interactions === 0) {
-        square.originalColor = getRandomColor();
+        const color = getRandomColor();
         // Apply that color to make it visible
-        square.style.backgroundColor = `rgb(${square.originalColor.r}, ${square.originalColor.g}, ${square.originalColor.b})`;
+        square.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
     }
 
     // Increment hover counter
     square.interactions++;
 
-    // Calculate darkening factor (gets smaller with each hover)
+    // Calculate new opacity (gets smaller with each hover)
     // Hover 1: 0.9 (90% of original brightness)
     // Hover 2: 0.8 (80% of original brightness)
     // Hover 10: 0.0 (completely black)
-    const darkenFactor = Math.max(0, 1 - (square.interactions * 0.1));
+    const newOpacity = Math.max(0, 1 - (square.interactions * 0.1));
 
-    // Apply darkening to each color component
-    const newR = Math.floor(square.originalColor.r * darkenFactor);
-    const newG = Math.floor(square.originalColor.g * darkenFactor);
-    const newB = Math.floor(square.originalColor.b * darkenFactor);
-
-    // Update square with the darkened color
-    square.style.backgroundColor = `rgb(${newR}, ${newG}, ${newB})`;
+    // Apply the new opacity to create darkening effect
+    square.style.opacity = newOpacity;
 }
 
 /**
@@ -92,7 +88,7 @@ function createNewGrid() {
     // Prompt user for grid size input
     const userInput = prompt('Enter number of squares per side (max 100):');
 
-    // Exit if user cancelled the prompt
+    // Exit if user canceled the prompt
     if (userInput === null) return;
 
     // Convert input to integer
@@ -108,9 +104,6 @@ function createNewGrid() {
     currentGridSize = gridSize;
     createGrid(gridSize);
 }
-
-// Initialize the application when page loads
-createGrid(16);
 
 // Set up button click handler for creating new grids
 document.getElementById('newGridBtn').addEventListener('click', createNewGrid);
